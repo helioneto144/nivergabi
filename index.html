@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uma Surpresa para Gabi!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;600&family=Pacifico&family=Roboto:wght@400;500&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Quando o conteúdo principal estiver visível, permitir rolagem */
+        body.content-visible {
+            overflow: auto;
+        }
+
+        /* Quando apenas a tela de bloqueio estiver visível, impedir rolagem */
+        body.lock-screen-visible {
+            overflow: hidden;
+        }
+
+        /* Melhorar legibilidade dos textos */
+        p {
+            font-family: 'Lato', 'Roboto', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            letter-spacing: 0.01em;
+        }
+
+        /* Estilos específicos para mensagens */
+        .message-text {
+            background-color: #fffcfd;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: inset 0 0 8px rgba(255, 192, 203, 0.2);
+            border-left: 4px solid #ffb6c1;
+        }
+
+        .message-text p {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #333;
+            text-shadow: 0 0 1px rgba(0,0,0,0.05);
+        }
+
+        .message-text strong {
+            color: #e83e8c;
+            font-weight: 700;
+        }
+
+        .font-lato {
+            font-family: 'Lato', 'Roboto', sans-serif !important;
+        }
+        .font-dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        #lock-screen {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        #main-content {
+            background-color: #fff8f8; /* Light pink background */
+            color: #333;
+        }
+        .photo-gallery img {
+            border: 5px solid #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .photo-gallery img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        .memory-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 2rem;
+            flex-direction: column;
+        }
+        .memory-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(232, 62, 140, 0.15);
+        }
+        .memory-item:nth-child(even) {
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .memory-item {
+                flex-direction: row;
+            }
+            .memory-item:nth-child(even) {
+                flex-direction: row-reverse;
+            }
+        }
+        .memory-image {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        .memory-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .memory-item:hover .memory-image img {
+            transform: scale(1.05);
+        }
+        .memory-text {
+            flex: 1;
+            padding: 2rem;
+            text-align: left;
+        }
+        .memory-item:nth-child(even) .memory-text {
+            text-align: right;
+        }
+        .btn-custom {
+            background-color: #ff79c6; /* Pink */
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #ff55b3; /* Darker Pink */
+        }
+        .input-custom {
+            border: 2px solid #ff79c6;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+        .input-custom:focus {
+            outline: none;
+            border-color: #ff55b3;
+            box-shadow: 0 0 0 3px rgba(255, 121, 198, 0.3);
+        }
+        .heartbeat {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: gold;
+            border-radius: 50%;
+            animation: sparkle-anim 1s infinite;
+            opacity: 0;
+        }
+        @keyframes sparkle-anim {
+            0% { transform: scale(0) translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: scale(1.5) translateY(-20px); opacity: 0; }
+        }
+
+        /* Estilos para o Jogo da Memória */
+        .memory-card {
+            width: 60px;
+            height: 60px;
+            background-color: #ffb6c1;
+            border: 2px solid #ff8fab;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            user-select: none;
+        }
+
+        @media (min-width: 400px) {
+            .memory-card {
+                width: 70px;
+                height: 70px;
+                font-size: 2rem;
+            }
+        }
+        .memory-card.flipped {
+            background-color: #fff0f5;
+            transform: rotateY(180deg);
+        }
+        .memory-card.matched {
+            background-color: #90ee90;
+            cursor: default;
+            opacity: 0.7;
+        }
+        .memory-card .card-face {
+            display: none;
+        }
+        .memory-card.flipped .card-face {
+            display: block;
+            transform: rotateY(180deg);
+        }
+
+        /* Estilos para o Quiz */
+        .quiz-option {
+            padding: 12px 16px;
+            background-color: #fff0f5;
+            border: 2px solid #ffb6c1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .quiz-option:hover {
+            background-color: #ffb6c1;
+        }
+        .quiz-option.selected {
+            background-color: #ff8fab;
+            color: white;
+            font-weight: bold;
+        }
+        .quiz-option.correct {
+            background-color: #90ee90;
+            border-color: #70dd70;
+        }
+        .quiz-option.incorrect {
+            background-color: #ffcccb;
+            border-color: #ff9999;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div id="lock-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center p-8 transition-opacity duration-1000 ease-in-out">
+        <div class="absolute inset-0 pointer-events-none" id="sparkle-container"></div>
+        <h1 class="font-pacifico text-5xl md:text-7xl mb-6 heartbeat">Contagem Regressiva...</h1>
+        <p class="text-xl md:text-2xl mb-8">Uma surpresa especial está chegando para a pessoa mais incrível!</p>
+        <div id="countdown" class="text-4xl md:text-6xl font-bold mb-10 space-x-2">
+            <span id="days">00</span><span>d</span>
+            <span id="hours">00</span><span>h</span>
+            <span id="minutes">00</span><span>m</span>
+            <span id="seconds">00</span><span>s</span>
+        </div>
+        <p class="text-lg mb-4">Ainda não é a hora... Mas a ansiedade é grande!</p>
+        <p class="mb-2 text-sm">Se o contador falhar ou a curiosidade for demais:</p>
+        <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-2">
+            <input type="password" id="password-input" placeholder="Senha Secreta" class="input-custom text-gray-700 px-4 py-2 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-pink-400 z-[1000]" autocomplete="off" style="position: relative;">
+            <button id="unlock-button" class="btn-custom px-6 py-2 rounded-lg shadow-md font-semibold">Desbloquear</button>
+        </div>
+        <p id="error-message" class="text-yellow-400 font-semibold mt-4 hidden">Senha incorreta, meu bem! Tente novamente.</p>
+        <p class="mt-10 text-xs">Feito com todo amor por Helio ❤️</p>
+    </div>
+
+    <div id="main-content" class="hidden opacity-0 transition-opacity duration-1000 ease-in-out min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+        <header class="text-center mb-16">
+            <h1 class="font-pacifico text-5xl sm:text-6xl md:text-7xl text-pink-500 mb-4">Feliz Aniversário, Meu Amor!</h1>
+            <p class="text-xl text-gray-600">Para a estrela da minha vida!</p>
+        </header>
+
+        <section class="max-w-3xl mx-auto mb-16 p-6 bg-white rounded-xl shadow-2xl">
+            <h2 class="font-dancing text-4xl text-pink-600 mb-6 text-center">Uma Mensagem do Coração...</h2>
+            <div class="message-text">
+                <p class="text-lg text-gray-800 font-lato">
+                    Meu amor, hoje o dia é todo seu! Desde aquele <strong>24 de fevereiro de 2017</strong>, minha vida ganhou um colorido especial, o seu sorriso se tornou minha melodia favorita e a sorte de ter você ao meu lado é algo que agradeço todos os dias. Você, nascida em <strong>2003</strong>, chegou para transformar tudo e me mostrar o verdadeiro significado da felicidade. Cada momento contigo é um presente.
+                </p>
+                <p class="text-lg text-gray-800 font-lato mt-4">
+                    Sou o Helio mais sortudo do universo por ter seu amor, seu carinho e sua companhia. Que este novo ano seja tão radiante e maravilhoso quanto você é!
+                </p>
+            </div>
+            <p class="text-right mt-6 font-dancing text-2xl text-pink-500">- Com todo o amor do mundo, Helio.</p>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="font-dancing text-4xl text-pink-600 mb-10 text-center">Nossas Memórias Especiais</h2>
+            <div id="memories-container" class="max-w-5xl mx-auto">
+                <!-- As memórias serão carregadas dinamicamente via JavaScript -->
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="font-dancing text-4xl text-pink-600 mb-10 text-center">Joguinhos para Você!</h2>
+            <div class="max-w-5xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Jogo da Memória -->
+                    <div class="bg-white p-6 rounded-xl shadow-2xl">
+                        <h3 class="font-dancing text-3xl text-pink-500 mb-4 text-center">Jogo da Memória</h3>
+                        <p class="text-gray-800 mb-4 text-center font-lato text-lg">Encontre os pares de símbolos do nosso amor!</p>
+                        <div id="memory-game-container" class="flex flex-col items-center">
+                            <div id="memory-game" class="grid grid-cols-4 gap-3 mb-4"></div>
+                            <div class="flex items-center space-x-4 mb-4">
+                                <p class="text-lg font-lato">Movimentos: <span id="moves-count" class="font-semibold">0</span></p>
+                                <p class="text-lg font-lato">Pares: <span id="pairs-found" class="font-semibold">0</span>/8</p>
+                            </div>
+                            <button id="reset-memory-game" class="btn-custom px-6 py-2 rounded-lg shadow-md font-semibold">Recomeçar</button>
+                            <p id="memory-win-message" class="text-xl text-green-500 font-bold mt-4 hidden">Você venceu! ❤️</p>
+                        </div>
+                    </div>
+
+                    <!-- Jogo de Palavras Embaralhadas -->
+                    <div class="bg-white p-6 rounded-xl shadow-2xl">
+                        <h3 class="font-dancing text-3xl text-pink-500 mb-4 text-center">Palavras de Amor</h3>
+                        <p class="text-gray-800 mb-4 text-center font-lato text-lg">Descubra as palavras de amor embaralhadas!</p>
+                        <div id="word-scramble-container" class="flex flex-col items-center">
+                            <p class="text-xl font-lato font-semibold mb-2">Palavra embaralhada:</p>
+                            <p id="scrambled-word" class="text-2xl font-bold text-pink-600 mb-4 tracking-wider">RMAO</p>
+                            <input type="text" id="word-guess" placeholder="Sua resposta..." class="input-custom w-full max-w-xs text-center mb-4 font-lato text-lg">
+                            <button id="check-word" class="btn-custom px-6 py-2 rounded-lg shadow-md font-semibold mb-2">Verificar</button>
+                            <button id="next-word" class="text-pink-500 underline mb-4 font-lato">Próxima palavra</button>
+                            <p id="word-result" class="text-lg font-bold mb-2 hidden"></p>
+                            <p class="text-base text-gray-600 font-lato">Dica: Todas são palavras relacionadas ao nosso amor!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz do Casal -->
+                <div class="bg-white p-6 rounded-xl shadow-2xl mt-8">
+                    <h3 class="font-dancing text-3xl text-pink-500 mb-4 text-center">Quiz do Nosso Amor</h3>
+                    <p class="text-gray-800 mb-6 text-center font-lato text-lg">Vamos ver o quanto você sabe sobre nossa história!</p>
+                    <div id="quiz-container" class="flex flex-col items-center">
+                        <div id="quiz-question" class="text-xl font-lato font-semibold mb-4 text-center"></div>
+                        <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl mb-6"></div>
+                        <button id="next-question" class="btn-custom px-6 py-2 rounded-lg shadow-md font-semibold">Próxima Pergunta</button>
+                        <p id="quiz-result" class="text-xl font-bold mt-4 hidden"></p>
+                        <div id="quiz-score" class="mt-4 text-lg font-lato hidden">
+                            Pontuação: <span id="correct-answers">0</span>/<span id="total-questions">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="max-w-3xl mx-auto mb-16 p-6 bg-white rounded-xl shadow-2xl">
+            <h2 class="font-dancing text-4xl text-pink-600 mb-6 text-center">Mais Palavras de Amor...</h2>
+            <div class="message-text">
+                <p class="text-lg text-gray-800 font-lato">
+                    Espero que este pequeno gesto possa te mostrar um pouquinho do imenso amor que sinto por você. Cada momento ao seu lado é precioso, cada sorriso seu ilumina meu dia.
+                </p>
+                <p class="text-lg text-gray-800 font-lato mt-4">
+                    Que seu novo ano seja repleto de alegrias, realizações, saúde, paz e que possamos continuar construindo nossa linda história juntos, lado a lado, com muito amor e cumplicidade. Você é meu presente diário.
+                </p>
+            </div>
+            <p class="text-right mt-6 font-dancing text-3xl text-pink-500">Te amo infinitamente!</p>
+        </section>
+
+        <footer class="text-center py-10">
+            <p class="text-xl font-pacifico text-pink-600">Com todo o amor do seu Helio</p>
+            <p class="text-sm text-gray-500 mt-2">❤️ Sempre e para Sempre ❤️</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
